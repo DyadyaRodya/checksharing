@@ -1,0 +1,13 @@
+C:\Users\kiril\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts
+pip install coverage
+C:\Users\kiril\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\python.exe -m pip install --upgrade pip
+cd C:\Users\kiril\OneDrive\Рабочий стол\АИС\Code
+coverage run Room.py
+coverage report
+coverage report -m
+coverage run room_unit_test.py
+coverage report -m
+pip install pytest-cov
+C:\Users\kiril\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts\pytest -v --cov=Room
+С этим он не учитывает внутренние функции и тп
+C:\Users\kiril\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts\pytest -v --cov=Room --cov=Bills --cov=Members_fix2
