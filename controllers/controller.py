@@ -74,6 +74,11 @@ class RoomController:
         return name in self.__rooms.keys()
 
     @python_way_wrapper
+    def get_room_info(self, name: str):
+        """отдает комнату или None"""
+        return self.__rooms.get(name)
+
+    @python_way_wrapper
     def add_bill_to_room(self, room_name, member_global_id, rest_name, summ, bill_id = None):
         """проверяет, что есть такой участник, комната
         и что (предел суммы счета не превышен или платят больше 1 человека)
