@@ -185,9 +185,27 @@ class RoomController:
         return None
 
     @python_way_wrapper
-    def get_winners_in_the_room(self, room_name: str = 'local'):
+    def set_winners_in_the_room(self, room_name: str = 'local'):
         if room_name in self.__rooms.keys():
             current_room: Room = self.__rooms[room_name]
             winners = current_room.set_payment()
-            return winners
+            mem_list: Members_list = current_room.get_mem_list()
+            winners_list = []
+            for winner in winners:
+                winners_list.append(mem_list.get_member(winner))
+            return winners_list
+        return None
+
+    @python_way_wrapper
+    def get_winners_in_the_room(self, room_name: str = 'local'):
+        if room_name in self.__rooms.keys():
+            current_room: Room = self.__rooms[room_name]
+            mem_list: Members_list = current_room.get_mem_list()
+            winners_number = mem_list.get_member_num()
+            winners_list = []
+            for num in range(winners_number):
+                mem: Member = mem_list.get_member(num)
+                if mem.get_status():
+                    winners_list.append(mem)
+            return winners_list
         return None
