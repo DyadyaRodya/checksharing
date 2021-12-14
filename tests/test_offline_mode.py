@@ -60,8 +60,12 @@ class TestOfflineRoom(unittest.TestCase):
 
     def test_edit_payment_settings(self):
         m2_id = self.rc.add_member(name="Mary")
-        self.assertIsNone(self.rc.edit_payment_settings(10))
-        self.assertIsNone(self.rc.edit_payment_settings(1))
+        self.assertTrue(self.rc.edit_payment_settings("local", 2))
+        self.assertIsNone(self.rc.edit_payment_settings("new_room", 10))
+
+    def test_get_winner(self):
+        self.assertIsNone(self.rc.set_winners_in_the_room("new_room"))
+        self.assertIsNone(self.rc.get_winners_in_the_room("new_room"))
 
 
 if __name__ == "__main__":
