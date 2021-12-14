@@ -101,7 +101,7 @@ class RoomController:
             current_room_bills = current_room.get_bill_list()
             bill: Bill or None = None
             for i in range(current_room_bills.get_bill_count()):
-                if current_room_bills.get_bill(i).get_id == old_bill_id:
+                if current_room_bills.get_bill(i).get_id() == old_bill_id:
                     bill = current_room_bills.get_bill(i)
                     break
             if bill is not None:
@@ -128,7 +128,7 @@ class RoomController:
             current_room_bills = current_room.get_bill_list()
             bill: Bill or None = None
             for i in range(current_room_bills.get_bill_count()):
-                if current_room_bills.get_bill(i).get_id == bill_id:
+                if current_room_bills.get_bill(i).get_id() == bill_id:
                     bill = current_room_bills.get_bill(i)
                     break
             if bill is not None:
