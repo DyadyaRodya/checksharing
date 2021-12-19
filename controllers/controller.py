@@ -74,34 +74,52 @@ class RoomController:
         return name in self.__rooms.keys()
 
     @python_way_wrapper
-    def add_bill_to_room(self, room_name, member_global_id, bill_id, rest_name, summ):
+    def get_room_info(self, name: str):
+        """отдает комнату или None"""
+        return self.__rooms.get(name)
+
+    @python_way_wrapper
+    def add_bill_to_room(self, room_name, member_global_id, rest_name, summ, bill_id = None):
         """проверяет, что есть такой участник, комната
         и что (предел суммы счета не превышен или платят больше 1 человека)
-        новую возвращает при успехе, иначе None"""
+        bill_id возвращает при успехе, иначе None"""
         if room_name in self.__rooms.keys():
             current_room = self.__rooms[room_name]
             member: Member = current_room.get_mem_list().get_member_by_global_id(member_global_id)
             new_summ = current_room.get_total_summ() + summ
             if member is not None and (current_room.get_win_count() > 1 or new_summ <= current_room.get_summ_limit()):
                 current_room_bills = current_room.get_bill_list()
+                bill: Bill or None = None
+                if bill_id is None:
+                    bill_id = uuid.uuid1()
+                else:
+                    for i in range(current_room_bills.get_bill_count()):
+                        if current_room_bills.get_bill(i).get_id() == bill_id:
+                            bill = current_room_bills.get_bill(i)
+                            break
+                if bill is not None and (bill.get_name() != rest_name or bill.get_summ() != summ or
+                                         bill.get_member() != member):  # bill_id exists but diffs
+                    return False
+                elif bill is not None:  # bill exists
+                    return bill_id
                 added_bill = current_room_bills.add_bill(member, bill_id, rest_name, summ)
                 member.add_bill(added_bill)
                 current_room.set_total_summ(current_room_bills.get_AllSumm())
-                return current_room.get_total_summ()
+                return bill_id
         return None
 
     @python_way_wrapper
-    def edit_bill_room(self, room_name, old_bill_id, member_global_id, bill_id, rest_name, summ):
+    def edit_bill_room(self, room_name, bill_id, member_global_id, rest_name, summ):
         """проверяет, что есть такой участник, комната, счет
         и что (предел суммы счета не превышен или платят больше 1 человека)
-        новую сумму возвращает при успехе, иначе None"""
+        bill_id возвращает при успехе, иначе None"""
         if room_name in self.__rooms.keys():
             current_room = self.__rooms[room_name]
             member: Member = current_room.get_mem_list().get_member_by_global_id(member_global_id)
             current_room_bills = current_room.get_bill_list()
             bill: Bill or None = None
             for i in range(current_room_bills.get_bill_count()):
-                if current_room_bills.get_bill(i).get_id == old_bill_id:
+                if current_room_bills.get_bill(i).get_id() == bill_id:
                     bill = current_room_bills.get_bill(i)
                     break
             if bill is not None:
@@ -116,7 +134,7 @@ class RoomController:
                     old_member: Member = bill.get_member()
                     old_member.del_bill(bill)
                     member.add_bill(added_bill)
-                    return current_room.get_total_summ()
+                    return bill_id
         return None
 
     @python_way_wrapper
@@ -128,7 +146,7 @@ class RoomController:
             current_room_bills = current_room.get_bill_list()
             bill: Bill or None = None
             for i in range(current_room_bills.get_bill_count()):
-                if current_room_bills.get_bill(i).get_id == bill_id:
+                if current_room_bills.get_bill(i).get_id() == bill_id:
                     bill = current_room_bills.get_bill(i)
                     break
             if bill is not None:
