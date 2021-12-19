@@ -7,3 +7,5 @@ __pycache__
 temp_upload
 venv*
 .coverage
+design
+kivy_venv
