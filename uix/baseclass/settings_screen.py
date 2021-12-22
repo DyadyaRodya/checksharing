@@ -10,4 +10,7 @@ with open(os.path.join(os.getcwd(), "uix", "kv", "settings_screen.kv"), encoding
 
 
 class SettingsScreen(MDScreen):
-    pass
+    def save_settings(self):
+        """Обработчик кнопки сохранения настроек
+        Переход на главный экран offline_room"""
+        pass

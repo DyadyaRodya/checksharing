@@ -1,11 +1,14 @@
 <OfflineRoom>
     name: "room"
+    on_leave: app.previous_screen = self.name
+
     MDBoxLayout:
         orientation: "vertical"
 
         MDToolbar:
             title: "Offline Room"
-            right_action_items: [['tools', lambda x: app.set_screen('settings')]]
+            # left_action_items: [['arrow-left', lambda x: app.set_screen(app.previous_screen)]]
+            right_action_items: [['cog', lambda x: app.set_screen('settings')]]
 
         MDBoxLayout:
             orientation: "vertical"
@@ -13,12 +16,31 @@
             width: root.width - dp(72)
             radius: 12
             padding: "12dp"
+            spacing: "12dp"
             md_bg_color: 1, 1, 1, .5
             pos_hint: {"center_x": .5, "center_y": .5}
+
+
+            MDRelativeLayout:
+                id: button_box
+                size_hint: (1, 0.15)
+                pos_hint: {"top": 1}
+
+                MDRoundFlatIconButton:
+                    id: summ
+                    icon: "currency-rub"
+                    text: "50 000"
+
+                MDRoundFlatIconButton:
+                    icon: "playlist-edit"
+                    pos_hint: {"right": 1}
+                    text: "Редактор чеков"
+                    on_release: root.manager.current = "bill_screen"
 
             MDLabel:
                 id: prev_label
                 text: "Список участников:"
+                theme_text_color: "Secondary"
                 font_style: "H6"
                 adaptive_height: True
                 halign: "center"
@@ -31,17 +53,17 @@
 
             MDFloatingActionButton:
                 id: float_act_btn
-                icon: 'plus'
+                icon: 'account-plus'
                 size_hint: None, None
-                size: dp(56), dp(56)
+                size: dp(40), dp(40)
                 opposite_colors: True
                 elevation_normal: 8
                 pos_hint: {'center_x': .9, 'center_y': .1}
                 disabled: root.disabled
-                on_release: root.on_press_add_member()
+                on_release: root.manager.current = "edit_member"
 
 
-        MDFillRoundFlatButton:
-            text: "Розыгрыш"
-            on_release: root.controllers.on_tap_button_start()
-            pos_hint: {"center_x": .5, "center_y": .1}
+            MDFillRoundFlatButton:
+                text: "Розыгрыш"
+                on_release: root.on_tap_button_start()
+                pos_hint: {"center_x": .5, "center_y": .1}
