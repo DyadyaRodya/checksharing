@@ -14,12 +14,12 @@ class RoomController:
     __rooms: dict[str, Room]
 
     def __init__(self):
-        self.__room_manager = RoomManager()
-        self.__room_worker = RoomWorker()
+        # self.__room_manager = RoomManager()
+        # self.__room_worker = RoomWorker()
         self.__rooms = {'local': Room(name='local')}
-        db_rooms = self.__room_worker.get_rooms_info()  # TODO: кто БД будет делать, в зависимости от реализации допилит
-        for room in db_rooms:
-            self.__rooms[room.get_name()] = room
+        # db_rooms = self.__room_worker.get_rooms_info()  # TODO: кто БД будет делать, в зависимости от реализации допилит
+        # for room in db_rooms:
+        #     self.__rooms[room.get_name()] = room
 
     @python_way_wrapper
     def get_room_by_name(self, name: str = 'local'):
@@ -35,16 +35,16 @@ class RoomController:
             return new_name
         return None
 
-    @python_way_wrapper
-    def save_to_bd(self):
-        """отдает воркеру список комнат для сохраниения в БД
-        (подразумевается, что воркер сам надет комнаты для удаления, обновления или добавления и всё сделает сам)
-        должен вернут результат сохранения в БД"""
-        list_to_save = []
-        for key, value in self.__rooms.items():
-            if key != 'local':
-                list_to_save.append(value)
-        return self.__room_worker.save(list_to_save)
+    # @python_way_wrapper
+    # def save_to_bd(self):
+    #     """отдает воркеру список комнат для сохраниения в БД
+    #     (подразумевается, что воркер сам надет комнаты для удаления, обновления или добавления и всё сделает сам)
+    #     должен вернут результат сохранения в БД"""
+    #     list_to_save = []
+    #     for key, value in self.__rooms.items():
+    #         if key != 'local':
+    #             list_to_save.append(value)
+    #     return self.__room_worker.save(list_to_save)
 
     @python_way_wrapper
     def reset_local_room(self):
@@ -100,7 +100,11 @@ class RoomController:
                 if bill is not None and (bill.get_name() != rest_name or bill.get_summ() != summ or
                                          bill.get_member() != member):  # bill_id exists but diffs
                     return False
-                elif bill is not None:  # bill exists
+                mem_list: Members_list = current_room.get_mem_list()
+                mem_number = mem_list.get_member_num()
+                for i in range(mem_number):
+                    mem_list.get_member(i).set_status([])
+                if bill is not None:  # bill exists
                     return bill_id
                 added_bill = current_room_bills.add_bill(member, bill_id, rest_name, summ)
                 member.add_bill(added_bill)
@@ -134,6 +138,10 @@ class RoomController:
                     old_member: Member = bill.get_member()
                     old_member.del_bill(bill)
                     member.add_bill(added_bill)
+                    mem_list: Members_list = current_room.get_mem_list()
+                    mem_number = mem_list.get_member_num()
+                    for i in range(mem_number):
+                        mem_list.get_member(i).set_status([])
                     return bill_id
         return None
 
@@ -155,6 +163,10 @@ class RoomController:
                 # upd member
                 member: Member = bill.get_member()
                 member.del_bill(bill)
+                mem_list: Members_list = current_room.get_mem_list()
+                mem_number = mem_list.get_member_num()
+                for i in range(mem_number):
+                    mem_list.get_member(i).set_status([])
                 return current_room.get_total_summ()
         return None
 
@@ -173,7 +185,11 @@ class RoomController:
                 member: Member = current_room.get_mem_list().get_member_by_global_id(global_id)
             if member is not None and member.get_name() != name:  # member exists but diff name
                 return False
-            elif member is not None and member.get_name() == name:  # member exists
+            mem_list: Members_list = current_room.get_mem_list()
+            mem_number = mem_list.get_member_num()
+            for i in range(mem_number):
+                mem_list.get_member(i).set_status([])
+            if member is not None and member.get_name() == name:  # member exists
                 return global_id
             # member is none == need to add member
             member = Member(name, global_id)
@@ -190,6 +206,12 @@ class RoomController:
             if member is not None:
                 current_room.del_mem_bills(global_id)
                 current_room.get_mem_list().del_member(member)
+                current_room_bills = current_room.get_bill_list()
+                current_room.set_total_summ(current_room_bills.get_AllSumm())
+                mem_list: Members_list = current_room.get_mem_list()
+                mem_number = mem_list.get_member_num()
+                for i in range(mem_number):
+                    mem_list.get_member(i).set_status([])
                 return True
         return None
 
@@ -206,8 +228,11 @@ class RoomController:
     def set_winners_in_the_room(self, room_name: str = 'local'):
         if room_name in self.__rooms.keys():
             current_room: Room = self.__rooms[room_name]
-            winners = current_room.set_payment()
             mem_list: Members_list = current_room.get_mem_list()
+            mem_number = mem_list.get_member_num()
+            for i in range(mem_number):
+                mem_list.get_member(i).set_status([])
+            winners = current_room.set_payment()
             winners_list = []
             for winner in winners:
                 winners_list.append(mem_list.get_member(winner))
@@ -226,4 +251,13 @@ class RoomController:
                 if mem.get_status():
                     winners_list.append(mem)
             return winners_list
+        return None
+
+    def reset_winners_in_the_room(self, room_name: str = 'local'):
+        if room_name in self.__rooms.keys():
+            current_room: Room = self.__rooms[room_name]
+            mem_list: Members_list = current_room.get_mem_list()
+            mem_number = mem_list.get_member_num()
+            for i in range(mem_number):
+                mem_list.get_member(i).set_status([])
         return None
