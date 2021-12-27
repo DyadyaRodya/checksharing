@@ -9,3 +9,5 @@ venv*
 .coverage
 design
 kivy_venv
+bin
+.buildozer

@@ -5,7 +5,7 @@ def python_way_wrapper(func_to_wrap):
         try:
             res = func_to_wrap(*args, **kwargs)
         except Exception as e:
-            print(f"Exception occurred during {func_to_wrap.__name__}")
+            print(f"Exception occurred during {func_to_wrap.__name__}: {e}")
             res = None
         return res
     return wrapper

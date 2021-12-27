@@ -1,6 +1,3 @@
-import random
-import subprocess
-
 class Member:
 
     def __init__(self, name, global_id, status = []):
