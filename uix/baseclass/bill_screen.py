@@ -1,7 +1,7 @@
 import os
 
 from kivy.lang import Builder
-from kivymd.uix.list import TwoLineAvatarIconListItem, IconRightWidget
+from kivymd.uix.list import ThreeLineAvatarIconListItem, IconRightWidget
 
 from kivymd.uix.screen import MDScreen
 
@@ -31,8 +31,10 @@ class BillScreen(MDScreen):
                 if added_by == mem_list.get_member(j):
                     added_by = f"{j+1}. {added_by.get_name()}"
                     break
-            status = f"Добавил: {added_by}, к оплате: {cur_bill.get_summ()}"
-            list_item = TwoLineAvatarIconListItem(text=cur_bill.get_name(), secondary_text=f"{status}")
+            owner = f"Добавлено: {added_by}"
+            status = f"К оплате: {cur_bill.get_summ()}"
+            list_item = ThreeLineAvatarIconListItem(text=cur_bill.get_name(), secondary_text=f"{owner}",
+                                                    tertiary_text=f"{status}")
             list_item.bind(on_release=self.on_release_list_item(i))
 
             right_widget = IconRightWidget(icon='delete-circle-outline')
