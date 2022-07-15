@@ -8,7 +8,7 @@ class BaseWorker:
 
 class RoomWorker(BaseWorker):
     def get_rooms_info(self) -> list[Room]:
-        return [Room(name='test')]  # TODO: реализуют вместе с БД - должен отдавать список из Room
+        return []  # TODO: реализуют вместе с БД - должен отдавать список из Room
 
     def save(self, list_to_save: list[Room]):
         return True  # TODO: тоже пока заглушка

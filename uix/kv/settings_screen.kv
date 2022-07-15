@@ -1,0 +1,39 @@
+<SettingsScreen>
+    name: "settings"
+    on_leave: app.previous_screen = self.name
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDToolbar:
+            title: "Настройки розыгрыша"
+            left_action_items: [['arrow-left', lambda x: app.set_screen(app.previous_screen)]]
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_x: None
+            width: root.width
+            radius: 12
+            padding: "12dp"
+            md_bg_color: 1, 1, 1, .5
+            pos_hint: {"center_x": .5, "center_y": .5}
+
+            AnchorLayout:
+                anchor_x: 'center'
+                anchor_y: 'top'
+                height: dp(40)
+                MDTextField:
+                    id: name_field
+                    input_filter: 'int'
+                    icon_left: "account-group"
+                    hint_text: 'Количество оплачивающих'
+
+            AnchorLayout:
+                anchor_x: 'center'
+                anchor_y: 'bottom'
+
+                MDFillRoundFlatIconButton:
+                    id: btn_save_member
+                    icon: 'check'
+                    text: 'Сохранить'
+                    on_release: root.save_settings()

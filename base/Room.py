@@ -82,7 +82,7 @@ class Room:
         self.__name = name
 
     def set_total_summ(self, summ_total_summ):
-        if summ_total_summ>0:
+        if summ_total_summ>=0:
             self.__total_summ = summ_total_summ
             return 0
         else:
